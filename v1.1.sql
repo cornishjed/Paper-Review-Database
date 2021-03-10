@@ -1,0 +1,80 @@
+CREATE TABLE Institution
+	(InstitutionID NUMBER(10) NOT NULL,
+	Name VARCHAR2(50) NOT NULL UNIQUE,
+	Country VARCHAR2(50) NOT NULL,
+	PRIMARY KEY (InstitutionID));
+		
+CREATE TABLE Author
+	(EMailID VARCHAR(50) NOT NULL,
+	FName VARCHAR2(20) NOT NULL,
+	LName VARCHAR2(20) NOT NULL,
+	Country VARCHAR2(30) NOT NULL,
+    Institution VARCHAR2(50) NOT NULL,
+	PRIMARY KEY (EmailID));
+			
+CREATE TABLE Paper
+	(PaperID NUMBER(10) NOT NULL,
+	Title VARCHAR2(50) NOT NULL,
+    Abstract VARCHAR2(4000) NOT NULL,
+	SubmissionDate DATE NOT NULL,
+    Category VARCHAR2(20) NOT NULL,
+	PRIMARY KEY (PaperID));
+
+CREATE TABLE PaperAuthor
+	(PaperID NUMBER(10) NOT NULL,
+	EmailID VARCHAR(50) NOT NULL);
+		
+CREATE TABLE Category
+	(CategoryID NUMBER(3),
+	Name VARCHAR2(20) NOT NULL UNIQUE,
+	PRIMARY KEY (CategoryID));
+		
+CREATE TABLE Reviewer
+	(ReviewerID NUMBER(20),
+	FName VARCHAR2(20) NOT NULL,
+	LName VARCHAR2(20) NOT NULL,
+	PhoneNo NUMBER(20) NOT NULL,
+	Email VARCHAR2(50) NOT NULL,
+	Country VARCHAR2(50) NOT NULL,
+	Institution VARCHAR2(50) NOT NULL,
+	Category VARCHAR2(20) NOT NULL,
+	PRIMARY KEY (ReviewerID));
+
+CREATE TABLE Review
+	(PaperID NUMBER(10) NOT NULL,
+    Score NUMBER(1) CHECK (Score <= 5) NOT NULL,
+	ReviewerID NUMBER(20),
+	EmailID VARCHAR(50) NOT NULL,
+    Feedback VARCHAR2(750),
+    Comments VARCHAR2(300),
+	ReviewDate DATE NOT NULL);
+
+ALTER TABLE Author
+	ADD FOREIGN KEY (Institution) REFERENCES Institution (Name);
+		
+ALTER TABLE Paper
+	ADD FOREIGN KEY (CategoryID) REFERENCES Category (Name);
+
+ALTER TABLE PaperAuthor
+	ADD FOREIGN KEY (PaperID) REFERENCES Paper (Title);
+
+ALTER TABLE PaperAuthor
+	ADD FOREIGN KEY (EmailID) REFERENCES Author (EmailID);
+    
+ALTER TABLE Reviewer
+	ADD FOREIGN KEY (InstitutionID) REFERENCES Institution (InstitutionID);
+    
+ALTER TABLE Reviewer
+	ADD FOREIGN KEY (CategoryID) REFERENCES Category (CategoryID);
+
+ALTER TABLE Review
+	ADD FOREIGN KEY (PaperID) REFERENCES Paper (PaperID);
+    
+ALTER TABLE Review
+	ADD FOREIGN KEY (ReviewerID) REFERENCES Reviewer (ReviewerID);
+    
+ALTER TABLE Review
+	ADD FOREIGN KEY (Author) REFERENCES Author (EmailID);
+
+
+
